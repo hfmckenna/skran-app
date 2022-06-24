@@ -5,7 +5,18 @@ on:
     branches:
       - main
 jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+      - name: Install dependencies and run tests
+        run: npm install && npm test --if-present
   deploy:
+    needs: unit-tests
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     steps:
@@ -26,5 +37,17 @@ jobs:
         env:
           VITE_API_AAD_APP_CLIENT_ID: ${{ secrets.CLIENT_ID }}
           VITE_API_AAD_APP_TENANT_ID: ${{ secrets.TENANT_ID }}
-          VITE_API_AAD_APP_REDIRECT_URI: "https://www.skran.app"
+          VITE_API_AAD_APP_REDIRECT_URI: 'https://www.skran.app'
           VITE_API_AAD_APP_FUNCTION_SCOPE_URI: ${{ secrets.FUNCTION_SCOPE_URI }}
+  e2e-tests:
+    needs: [unit-tests, deploy]
+    runs-on: ubuntu-latest # or macos-latest, windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies and run tests
+        run: npm install && npx playwright install-deps && npx playwright install && npm run playwright:run
+        env:
+          VITE_API_AAD_APP_REDIRECT_URI: 'https://www.skran.app'
