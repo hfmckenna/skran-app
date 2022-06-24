@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const mongoose = require('mongoose');
 const validator = require('validator');
 
@@ -8,6 +10,7 @@ const deleteAtPath = (obj, path, index) => {
   }
   deleteAtPath(obj[path[index]], path, index + 1);
 }
+
 const toJson = (schema) => {
   let transform;
   if (schema.options.toJSON && schema.options.toJSON.transform) {

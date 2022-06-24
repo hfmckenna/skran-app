@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { decode, verify } from 'jsonwebtoken';
 
 const jwksClient = require('jwks-rsa');
@@ -21,7 +23,6 @@ let aadAppUniqueUser = null;
 
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
-    console.log(JSON.stringify(req));
     try {
         // get ssoToken from client request
         const ssoToken = req.body?.ssoToken || req.headers?.authorization;
