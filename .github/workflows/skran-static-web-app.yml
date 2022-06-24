@@ -15,15 +15,13 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Azure CLI script file
-        uses: azure/CLI@v1
+      - name: Azure ARM resource deployment
+        uses: azure/arm-deploy@v1
         with:
-          azcliversion: 2.37.0
-          inlineScript: |
-            az staticwebapp appsettings set --name skran-app --setting-names MONGODB_URL=$MONGODB_URL CLIENT_SECRET=$CLIENT_SECRET
-        env:
-          MONGODB_URL: ${{ secrets.MONGODB_URL }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
+          template: azuredeploy.json
+          parameters: azuredeploy.parameters.json SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }} RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }} staticSites_skran_app_name=${{ secrets.STATICSITES_SKRAN_APP_NAME }} INSTRUMENTATION_KEY=${{ secrets.INSTRUMENTATION_KEY }} MONGODB_URL=${{ secrets.MONGODB_URL }} CLIENT_SECRET=${{ secrets.CLIENT_SECRET }} APPLICATIONINSIGHTS_CONNECTION_STRING=${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }} DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}
   unit-tests:
     runs-on: ubuntu-latest
     name: Unit & Integration Tests

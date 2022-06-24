@@ -1,0 +1,76 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "variables": {},
+    "parameters": {
+        "staticSites_skran_app_name": {
+            "defaultValue": "skran-app",
+            "type": "String"
+        },
+        "MONGODB_URL": {
+            "type": "String"
+        },
+        "CLIENT_SECRET": {
+            "type": "String"
+        },
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": {
+            "type": "String"
+        },
+        "INSTRUMENTATION_KEY": {
+            "type": "String"
+        },
+        "SUBSCRIPTION_ID": {
+            "type": "String"
+        },
+        "RESOURCE_GROUP": {
+            "type": "String"
+        },
+        "DOMAIN_NAME": {
+            "type": "String"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/staticSites",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('staticSites_skran_app_name')]",
+            "location": "West Europe",
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "[concat('/subscriptions/', parameters('SUBSCRIPTION_ID'), '/resourceGroups/', parameters('RESOURCE_GROUP'), '/providers/microsoft.insights/components', parameters('staticSites_skran_app_name'))]",
+                "hidden-link: /app-insights-instrumentation-key": "[parameters('INSTRUMENTATION_KEY')]",
+                "hidden-link: /app-insights-conn-string": "[parameters('APPLICATIONINSIGHTS_CONNECTION_STRING')]"
+            },
+            "sku": {
+                "name": "Standard",
+                "tier": "Standard"
+            },
+            "properties": {
+                "repositoryUrl": "[concat('https://github.com/hfmckenna/', parameters('staticSites_skran_app_name'))]",
+                "branch": "main",
+                "stagingEnvironmentPolicy": "Enabled",
+                "allowConfigFileUpdates": true,
+                "provider": "GitHub",
+                "enterpriseGradeCdnStatus": "Disabled"
+            },
+            "resources": [
+                {
+                    "apiVersion": "2021-01-15",
+                    "name": "appsettings",
+                    "type": "config",
+                    "location": "West Europe",
+                    "properties": {
+                        "MONGODB_URL": "[parameters('MONGODB_URL')]",
+                        "CLIENT_SECRET": "[parameters('CLIENT_SECRET')]",
+                        "APPLICATIONINSIGHTS_CONNECTION_STRING": "[parameters('APPLICATIONINSIGHTS_CONNECTION_STRING')]",
+                        "INSTRUMENTATION_KEY": "[parameters('INSTRUMENTATION_KEY')]",
+                        "SUBSCRIPTION_ID": "[parameters('SUBSCRIPTION_ID')]",
+                        "RESOURCE_GROUP": "[parameters('RESOURCE_GROUP')]"
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/staticSites', parameters('staticSites_skran_app_name'))]"
+                    ]
+                }
+            ]
+        }
+    ]
+}
