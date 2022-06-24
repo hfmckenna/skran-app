@@ -7,6 +7,15 @@ on:
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:latest
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
+          MONGO_INITDB_DATABASE: test
+        ports:
+          - 27017:27017
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -15,6 +24,8 @@ jobs:
           cache: 'npm'
       - name: Install dependencies and run tests
         run: npm install && cd api && npm install && cd - && npm run verification --if-present
+        env:
+          MONGODB_URL: "mongodb://root:example@localhost:27017/"
   deploy:
     needs: unit-tests
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')

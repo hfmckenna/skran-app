@@ -1,0 +1,16 @@
+# Use root/example as user/password credentials
+# App actually uses the Mongo API for Cosmos DB, however the local emulation for Mongo Cosmos seems very flaky.
+# Inconsistencies between Mongo and the Cosmos implementation or any improvements to the local Cosmos emulator may allow this Docker image to be abandoned.
+# https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=ssl-netstd21
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example

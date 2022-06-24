@@ -4,15 +4,15 @@
     "version": "0.0.1",
     "proxy": "http://localhost:7071",
     "scripts": {
-        "dev": "NODE_ENV=development vite",
-        "build": "NODE_ENV=production tsc && vite build",
+        "dev": "cross-env NODE_ENV=development vite",
+        "build": "cross-env NODE_ENV=production tsc && vite build",
         "preview": "vite preview --dir tests",
-        "test": "NODE_ENV=test vitest --dir tests",
-        "test:api": "NODE_ENV=test vitest --dir ./tests/integration --config ./api/vitest.config.ts",
-        "verification": "NODE_ENV=test npm run test && npm run test:api",
-        "coverage": "NODE_ENV=test vitest run --coverage",
-        "playwright:run": "NODE_ENV=test npx playwright test spec",
-        "playwright:open": "NODE_ENV=test npx playwright test spec --headed"
+        "test": "cross-env NODE_ENV=test vitest --dir tests/component",
+        "test:api": "cross-env NODE_ENV=test vitest --mode test --dir ./tests/integration --config ./api/vitest.config.ts",
+        "verification": "cross-env NODE_ENV=test npm run test && npm run test:api",
+        "coverage": "cross-env NODE_ENV=test vitest run --coverage",
+        "playwright:run": "cross-env NODE_ENV=test npx playwright test spec",
+        "playwright:open": "cross-env NODE_ENV=test npx playwright test spec --headed"
     },
     "dependencies": {
         "@azure/msal-browser": "^2.22.1",
@@ -31,6 +31,7 @@
         "@typescript-eslint/parser": "^5.14.0",
         "@vitejs/plugin-react": "^1.2.0",
         "autoprefixer": "^10.4.4",
+        "cross-env": "^7.0.3",
         "dotenv": "^16.0.1",
         "eslint": "^8.11.0",
         "eslint-config-google": "^0.14.0",

@@ -1,4 +1,13 @@
-import { test, expect } from 'vitest';
+import { test, expect, beforeAll, afterAll } from 'vitest';
+import recipes from '../../api/services/recipes';
+
+beforeAll(async () => {
+    await recipes.connect();
+});
+
+afterAll(async () => {
+    await recipes.disconnect();
+});
 
 test('paginates schema correctly', () => {
     const test = 0;

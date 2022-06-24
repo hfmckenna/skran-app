@@ -31,3 +31,4 @@ cypress/screenshots
 # environment
 .env.development
 local.settings.json
+env.*.local
