@@ -99,9 +99,9 @@ module.exports = async function (context, req) {
         context.log(error);
 
         context.res = {
-            status: error.status || 500,
+            status: 500,
             body: {
-                response: error.message || JSON.stringify(error),
+                response: JSON.stringify(error)
             },
         };
     }
