@@ -17,11 +17,12 @@ jobs:
       - name: Azure CLI script file
         uses: azure/CLI@v1
         with:
-          azcliversion: 2.30.0
+          azcliversion: 2.37.0
           inlineScript: |
-            az staticwebapp appsettings set --name skran-app --setting-names MONGODB_URL=$MONGODB_URL
+            az staticwebapp appsettings set --name skran-app --setting-names MONGODB_URL=$MONGODB_URL CLIENT_SECRET=$CLIENT_SECRET
         env:
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
   unit-tests:
     runs-on: ubuntu-latest
     services:
