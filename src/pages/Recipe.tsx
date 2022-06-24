@@ -1,16 +1,13 @@
-// @ts-nocheck
-
 import { useEffect, useState } from "react";
 
 import { MsalAuthenticationTemplate, useMsal, useAccount } from "@azure/msal-react";
 import { InteractionRequiredAuthError, InteractionType } from "@azure/msal-browser";
 
 import { loginRequest, protectedResources } from "../../authConfig";
-import { callOwnApiWithToken } from "../fetch";
-import { FunctionData } from "../components/DataDisplay";
-import { Colour } from "../components/Colour";
+import { callApiWithToken } from "../fetch";
+import { ProfileData } from "../components/DataDisplay";
 
-const FunctionContent = () => {
+const ProfileContent = () => {
   /**
    * useMsal is hook that returns the PublicClientApplication instance,
    * an array of all accounts currently signed in and an inProgress value
@@ -19,30 +16,25 @@ const FunctionContent = () => {
    */
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const [functionData, setFunctionData] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
+  const [graphData, setGraphData] = useState(null);
 
   useEffect(() => {
-    if (account && inProgress === "none" && !functionData) {
+    if (account && inProgress === "none") {
       instance.acquireTokenSilent({
-        scopes: protectedResources.recipeApi.scopes,
+        scopes: protectedResources.graphMe.scopes,
         account: account
       }).then((response) => {
-        // @ts-ignore
-        setAccessToken(response.accessToken);
-        callOwnApiWithToken(response.accessToken, protectedResources.recipeApi.endpoint)
-          .then(response => setFunctionData(response));
+        callApiWithToken(response.accessToken, protectedResources.graphMe.endpoint)
+          .then(response => setGraphData(response));
       }).catch((error) => {
         // in case if silent token acquisition fails, fallback to an interactive method
         if (error instanceof InteractionRequiredAuthError) {
           if (account && inProgress === "none") {
             instance.acquireTokenPopup({
-              scopes: protectedResources.recipeApi.scopes,
+              scopes: protectedResources.graphMe.scopes,
             }).then((response) => {
-              // @ts-ignore
-              setAccessToken(response.accessToken);
-              callOwnApiWithToken(response.accessToken, protectedResources.recipeApi.endpoint)
-                .then(response => setFunctionData(response));
+              callApiWithToken(response.accessToken, protectedResources.graphMe.endpoint)
+                .then(response => setGraphData(response));
             }).catch(error => console.log(error));
           }
         }
@@ -50,16 +42,9 @@ const FunctionContent = () => {
     }
   }, [account, inProgress, instance]);
 
-  const changeFunctionData = (data: any) =>{
-    setFunctionData(data);
-  }
-
-  // @ts-ignore
-  // @ts-ignore
   return (
     <>
-      { functionData ? <FunctionData functionData={functionData} /> : null }
-      <Colour changeFunctionData={changeFunctionData} accessToken={accessToken} user={(functionData && functionData.response)? functionData.response: null} endpoint={protectedResources.recipeApi.endpoint}/>
+      { graphData ? <ProfileData graphData={graphData} /> : null }
     </>
   );
 };
@@ -71,7 +56,7 @@ const FunctionContent = () => {
  * to be passed to the login API, a component to display while authentication is in progress or a component to display if an error occurs. For more, visit:
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-react/docs/getting-started.md
  */
-export const Function = () => {
+export const Profile = () => {
   const authRequest = {
     ...loginRequest
   };
@@ -81,9 +66,9 @@ export const Function = () => {
       interactionType={InteractionType.Redirect}
       authenticationRequest={authRequest}
     >
-      <FunctionContent />
+      <ProfileContent />
     </MsalAuthenticationTemplate>
   )
 };
 
-export default Function;
+export default Profile;

@@ -67,8 +67,8 @@ export const protectedResources = {
     endpoint: "https://graph.microsoft.com/v1.0/me",
     scopes: ["User.Read"],
   },
-  functionApi: {
-    endpoint: "/api/hello",
+  recipeApi: {
+    endpoint: "/api/v1/recipes",
     scopes: [`${import.meta.env.VITE_API_AAD_APP_FUNCTION_SCOPE_URI}/access_as_user`], // e.g. api://xxxxxx/access_as_user
   }
 }

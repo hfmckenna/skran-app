@@ -21,7 +21,7 @@ jobs:
           action: 'upload'
           app_location: '/'
           api_location: 'api'
-          output_location: 'dist'
+          output_location: 'build'
         env:
           VITE_API_AAD_APP_CLIENT_ID: ${{ secrets.CLIENT_ID }}
           VITE_API_AAD_APP_TENANT_ID: ${{ secrets.TENANT_ID }}

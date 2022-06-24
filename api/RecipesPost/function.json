@@ -9,12 +9,13 @@
         "get",
         "post"
       ],
-      "route": "hello"
+      "route": "v1/recipes"
     },
     {
       "type": "http",
       "direction": "out",
       "name": "res"
     }
-  ]
+  ],
+  "scriptFile": "../dist/RecipesPost/index.js"
 }

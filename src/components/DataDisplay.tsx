@@ -67,8 +67,8 @@ export const FunctionData = (props) => {
       <div className="data-area-div">
         <p>Calling <strong>protected Azure Function API (which in turn calls Microsoft Graph)</strong>...</p>
         <ul>
-          <li><strong>endpoint:</strong> <mark>{protectedResources.functionApi.endpoint}</mark></li>
-          <li><strong>scope:</strong> <mark>{protectedResources.functionApi.scopes[0]}</mark></li>
+          <li><strong>endpoint:</strong> <mark>{protectedResources.recipeApi.endpoint}</mark></li>
+          <li><strong>scope:</strong> <mark>{protectedResources.recipeApi.scopes[0]}</mark></li>
         </ul>
         <p>Contents of the <strong>response</strong> is below:</p>
       </div>

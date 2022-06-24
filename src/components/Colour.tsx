@@ -10,7 +10,7 @@ interface RecipeProps {
     changeFunctionData: any;
 }
 
-export const Recipe = (props: RecipeProps) => {
+export const Colour = (props: RecipeProps) => {
     const {accessToken, endpoint, user, changeFunctionData} = props;
     const [color, setColor] = useState('');
 
