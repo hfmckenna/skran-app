@@ -7,7 +7,7 @@ let connected = false;
 let connection = null;
 
 const mongooseConfig = {
-    url: process.env.MONGODB_URL || import.meta.env.VITE_MONGODB_URL,
+    url: process.env.MONGODB_URL,
     options: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
