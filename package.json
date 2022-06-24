@@ -7,7 +7,8 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "cypress:open": "cypress open"
+        "playwright:run": "npx playwright test",
+        "playwright:open": "npx playwright test --headed"
     },
     "dependencies": {
         "@azure/msal-browser": "^2.22.1",
@@ -17,13 +18,13 @@
         "react-router-dom": "^6.2.2"
     },
     "devDependencies": {
+        "@playwright/test": "^1.22.2",
         "@types/react": "^18.0.7",
         "@types/react-dom": "^18.0.0",
         "@typescript-eslint/eslint-plugin": "^5.14.0",
         "@typescript-eslint/parser": "^5.14.0",
         "@vitejs/plugin-react": "^1.2.0",
         "autoprefixer": "^10.4.4",
-        "cypress": "^9.5.2",
         "eslint": "^8.11.0",
         "eslint-config-google": "^0.14.0",
         "eslint-config-prettier": "^8.5.0",
