@@ -5,7 +5,7 @@
     "proxy": "http://localhost:7071",
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build && cd api && npm run build",
+        "build": "tsc && vite build",
         "preview": "vite preview",
         "cypress:open": "cypress open"
     },
