@@ -11,7 +11,7 @@ const mongooseConfig = {
     options: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: process.env['DB_NAME']
+        dbName: process.env['DB_NAME'] || 'test'
     },
 };
 
@@ -85,6 +85,10 @@ const getAllRecipes = async () => {
     return Recipes.find({});
 };
 
+const deleteAllRecipes = async () => {
+    await Recipes.deleteMany({});
+}
+
 export default {
     connect,
     disconnect,
@@ -94,5 +98,6 @@ export default {
     getRecipeById,
     addRecipe,
     deleteRecipeById,
-    getAllRecipes
+    getAllRecipes,
+    deleteAllRecipes
 };

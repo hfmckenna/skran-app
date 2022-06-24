@@ -8,6 +8,8 @@
         "build": "tsc && vite build",
         "preview": "vite preview --dir tests",
         "test": "vitest --dir tests",
+        "test:api": "vitest --dir ./api/tests --config ./api/vitest.config.ts",
+        "verification": "npm run test && npm run test:api",
         "coverage": "vitest run --coverage",
         "playwright:run": "npx playwright test spec",
         "playwright:open": "npx playwright test spec --headed"
