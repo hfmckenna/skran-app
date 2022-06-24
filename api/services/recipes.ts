@@ -6,11 +6,8 @@ import Recipes from '../models/recipes';
 let connected = false;
 let connection = null;
 
-// Vitest doesn't support environment variables at run time, local db connection string stored here https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=ssl-netstd21
-const testDb = "mongodb://localhost:C2y6yDjf5%2FR%2Bob0N8A7Cgv30VRDJIWEHLM%2B4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw%2FJw%3D%3D@localhost:10255/admin?ssl=true"
-
 const mongooseConfig = {
-    url: process.env.MONGODB_URL || testDb,
+    url: process.env.MONGODB_URL,
     options: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
