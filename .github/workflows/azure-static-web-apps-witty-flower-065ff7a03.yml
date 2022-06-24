@@ -5,6 +5,23 @@ on:
     branches:
       - main
 jobs:
+  populate-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Azure CLI script file
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az staticwebapp appsettings set --name skran-app --setting-names MONGODB_URL=$MONGODB_URL
+        env:
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
   unit-tests:
     runs-on: ubuntu-latest
     services:
@@ -20,14 +37,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 14
           cache: 'npm'
       - name: Install dependencies and run tests
         run: npm install && cd api && npm install && cd - && npm run verification --if-present
         env:
           MONGODB_URL: "mongodb://root:example@localhost:27017/"
   deploy:
-    needs: unit-tests
+    needs: [unit-tests,populate-env]
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     steps:
