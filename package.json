@@ -4,15 +4,15 @@
     "version": "0.0.1",
     "proxy": "http://localhost:7071",
     "scripts": {
-        "dev": "vite",
-        "build": "tsc && vite build",
+        "dev": "NODE_ENV=development vite",
+        "build": "NODE_ENV=production tsc && vite build",
         "preview": "vite preview --dir tests",
-        "test": "vitest --dir tests",
-        "test:api": "vitest --dir ./api/tests --config ./api/vitest.config.ts",
-        "verification": "npm run test && npm run test:api",
-        "coverage": "vitest run --coverage",
-        "playwright:run": "npx playwright test spec",
-        "playwright:open": "npx playwright test spec --headed"
+        "test": "NODE_ENV=test vitest --dir tests",
+        "test:api": "NODE_ENV=test vitest --dir ./tests/integration --config ./api/vitest.config.ts",
+        "verification": "NODE_ENV=test npm run test && npm run test:api && npm run playwright:run",
+        "coverage": "NODE_ENV=test vitest run --coverage",
+        "playwright:run": "NODE_ENV=test npx playwright test spec",
+        "playwright:open": "NODE_ENV=test npx playwright test spec --headed"
     },
     "dependencies": {
         "@azure/msal-browser": "^2.22.1",
