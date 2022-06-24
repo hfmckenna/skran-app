@@ -25,7 +25,13 @@
         "RESOURCE_GROUP": {
             "type": "String"
         },
-        "DOMAIN_NAME": {
+        "CLIENT_ID": {
+            "type": "String"
+        },
+        "TENANT_INFO": {
+            "type": "String"
+        },
+        "EXPECTED_SCOPES": {
             "type": "String"
         }
     },
@@ -64,7 +70,10 @@
                         "APPLICATIONINSIGHTS_CONNECTION_STRING": "[parameters('APPLICATIONINSIGHTS_CONNECTION_STRING')]",
                         "INSTRUMENTATION_KEY": "[parameters('INSTRUMENTATION_KEY')]",
                         "SUBSCRIPTION_ID": "[parameters('SUBSCRIPTION_ID')]",
-                        "RESOURCE_GROUP": "[parameters('RESOURCE_GROUP')]"
+                        "RESOURCE_GROUP": "[parameters('RESOURCE_GROUP')]",
+                        "CLIENT_ID": "[parameters('CLIENT_ID')]",
+                        "TENANT_INFO": "[parameters('TENANT_INFO')]",
+                        "EXPECTED_SCOPES": "[parameters('EXPECTED_SCOPES')]"
                     },
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/staticSites', parameters('staticSites_skran_app_name'))]"
