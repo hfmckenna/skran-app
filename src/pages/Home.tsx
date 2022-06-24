@@ -24,7 +24,7 @@ const ProfileContent = () => {
         scopes: protectedResources.graphMe.scopes,
         account: account
       }).then((response) => {
-        callApiWithToken(`Bearer ${response.accessToken}`, protectedResources.graphMe.endpoint)
+        callApiWithToken(response.accessToken, protectedResources.graphMe.endpoint)
           .then(response => setGraphData(response));
       }).catch((error) => {
         // in case if silent token acquisition fails, fallback to an interactive method
@@ -33,7 +33,7 @@ const ProfileContent = () => {
             instance.acquireTokenPopup({
               scopes: protectedResources.graphMe.scopes,
             }).then((response) => {
-              callApiWithToken(`Bearer ${response.accessToken}`, protectedResources.graphMe.endpoint)
+              callApiWithToken(response.accessToken, protectedResources.graphMe.endpoint)
                 .then(response => setGraphData(response));
             }).catch(error => console.log(error));
           }

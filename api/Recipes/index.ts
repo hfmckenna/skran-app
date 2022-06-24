@@ -25,7 +25,15 @@ module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
     try {
         // get ssoToken from client request
-        const ssoToken = req.body?.ssoToken || req.headers?.authorization;
+        let ssoToken = req.body?.ssoToken;
+        const headerToken = req.headers['x-custom-authorization'];
+        // strip bearer prefix from get requests
+        if (req.method === 'GET' && headerToken) {
+            ssoToken = headerToken.substring(7, headerToken.length);
+        }
+
+        context.log(headerToken);
+
         if (!ssoToken)
             throw Error({
                 name: 'Sample-Auth',
