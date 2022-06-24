@@ -33,12 +33,12 @@ export const callApiWithToken = async(accessToken: any, apiEndpoint: any) => {
  * @param {string} accessToken
  * @param {string} apiEndpoint
  */
-export const callOwnApiWithToken = async(accessToken, apiEndpoint, user) => {
+export const callOwnApiWithToken = async(accessToken, apiEndpoint, newRecipe) => {
   return fetch(apiEndpoint, {
     method: "POST",
     body: JSON.stringify({
       ssoToken: accessToken,
-      user
+      newRecipe
     })
   }).then(response => response.json())
     .catch(error => console.log(error));

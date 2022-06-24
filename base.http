@@ -1,0 +1,7 @@
+GET {{ url }}/api/v1/recipes
+
+###
+
+POST {{ url }}/api/v1/recipes
+
+###

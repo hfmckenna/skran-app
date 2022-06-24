@@ -17,5 +17,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/RecipesPost/index.js"
+  "scriptFile": "../dist/Recipes/index.js"
 }

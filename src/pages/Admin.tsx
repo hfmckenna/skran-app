@@ -8,7 +8,7 @@ import { InteractionRequiredAuthError, InteractionType } from "@azure/msal-brows
 import { loginRequest, protectedResources } from "../../authConfig";
 import { callOwnApiWithToken } from "../fetch";
 import { FunctionData } from "../components/DataDisplay";
-import { Colour } from "../components/Colour";
+import { SubmitRecipe } from "../components/SubmitRecipe";
 
 const FunctionContent = () => {
   /**
@@ -54,12 +54,10 @@ const FunctionContent = () => {
     setFunctionData(data);
   }
 
-  // @ts-ignore
-  // @ts-ignore
   return (
     <>
       { functionData ? <FunctionData functionData={functionData} /> : null }
-      <Colour changeFunctionData={changeFunctionData} accessToken={accessToken} user={(functionData && functionData.response)? functionData.response: null} endpoint={protectedResources.recipeApi.endpoint}/>
+      <SubmitRecipe changeFunctionData={changeFunctionData} accessToken={accessToken} endpoint={protectedResources.recipeApi.endpoint}/>
     </>
   );
 };
