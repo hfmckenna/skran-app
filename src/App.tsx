@@ -16,7 +16,7 @@ export function App() {
                                 <Link to='/admin'>Admin</Link>
                             </li>
                             <li>
-                                <Link to='/recipe'>Recipe</Link>
+                                <Link to='/recipes'>Recipes</Link>
                             </li>
                         </ul>
                     </nav>
