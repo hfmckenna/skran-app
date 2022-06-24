@@ -5,12 +5,17 @@
   "navigationFallback": {
     "rewrite": "/index.html"
   },
-  "routes": [
-    {
-      "route": "/admin",
-      "allowedRoles": ["administrator"]
+  "auth": {
+    "identityProviders": {
+      "azureActiveDirectory": {
+        "registration": {
+          "openIdIssuer": "https://login.microsoftonline.com/4bbbbd21-b881-424a-9188-a82791e0a80e/v2.0",
+          "clientIdSettingName": "CLIENT_ID",
+          "clientSecretSettingName": "CLIENT_SECRET"
+        }
+      }
     }
-  ],
+  },
   "responseOverrides": {
     "404": {
       "rewrite": "/404.html"

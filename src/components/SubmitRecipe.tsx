@@ -11,7 +11,7 @@ interface RecipeProps {
 }
 
 const newRecipe = {
-    title: 'Spaghetti and meatballs 2',
+    title: 'Spaghetti and meatballs 3',
     instructions: 'First boil some spaghetti, then you get your meatballs.',
     components: [
         {
