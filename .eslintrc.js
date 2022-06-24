@@ -21,5 +21,8 @@ module.exports = {
     '@typescript-eslint',
   ],
   'rules': {
+    "valid-jsdoc": "off",
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off"
   },
 };

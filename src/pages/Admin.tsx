@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { useEffect, useState } from "react";
 
 import { MsalAuthenticationTemplate, useMsal, useAccount } from "@azure/msal-react";
@@ -20,7 +18,7 @@ const FunctionContent = () => {
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {});
   const [functionData, setFunctionData] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
   useEffect(() => {
     if (account && inProgress === "none" && !functionData) {

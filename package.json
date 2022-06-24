@@ -6,6 +6,7 @@
     "scripts": {
         "dev": "cross-env NODE_ENV=development vite",
         "build": "tsc && vite build",
+        "watch": "tsc -w",
         "preview": "vite preview --dir tests",
         "test": "cross-env NODE_ENV=test vitest --dir tests/component",
         "test:api": "cross-env NODE_ENV=test MONGODB_URL=mongodb://root:example@localhost:27017/ vitest --mode test --dir ./tests/integration --config ./api/vitest.config.ts",

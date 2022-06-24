@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { callOwnApiWithToken } from '../fetch';
@@ -6,7 +5,6 @@ import { callOwnApiWithToken } from '../fetch';
 interface RecipeProps {
     accessToken: any;
     endpoint: any;
-    user: any;
     changeFunctionData: any;
 }
 
@@ -88,13 +86,9 @@ export const SubmitRecipe = (props: RecipeProps) => {
 
     return (
         <>
-            <center>
-                <hr></hr>
-                <h2>Your favorite Color?</h2>
-                <button onClick={onFormSubmit}>
-                    Submit
-                </button>
-            </center>
+            <hr></hr>
+            <h2>Your favorite Color?</h2>
+            <button onClick={onFormSubmit}>Submit</button>
         </>
     );
 };

@@ -2,7 +2,7 @@
 # App actually uses the Mongo API for Cosmos DB, however the local emulation for Mongo Cosmos seems very flaky.
 # Inconsistencies between Mongo and the Cosmos implementation or any improvements to the local Cosmos emulator may allow this Docker image to be abandoned.
 # https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=ssl-netstd21
-version: '3.1'
+version: '3.6'
 
 services:
 
