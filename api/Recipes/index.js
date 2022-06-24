@@ -21,14 +21,80 @@ let aadAppUniqueUser = null;
 
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
-    switch (req.method) {
-        case 'POST':
-            await postRecipe(context, req);
-            break;
-        case 'GET':
-            await getRecipes(context, req);
-            break;
-        default:
+    console.log(JSON.stringify(req));
+    try {
+        // get ssoToken from client request
+        const ssoToken = req.body?.ssoToken || req.headers?.authorization;
+        if (!ssoToken)
+            throw Error({
+                name: 'Sample-Auth',
+                message: 'no ssoToken sent from client',
+                status: 401,
+            });
+
+        // validate client's ssoToken
+        const isAuthorized = await validateAccessToken(ssoToken);
+        if (!isAuthorized)
+            throw Error({
+                name: 'Sample-Auth',
+                message: "can't validate access token",
+                status: 401,
+            });
+
+        // construct scope for API call - must match registered scopes
+        const oboRequest = {
+            oboAssertion: ssoToken,
+            scopes: ['User.Read'],
+        };
+
+        // get token on behalf of user
+        let response = await cca.acquireTokenOnBehalfOf(oboRequest);
+        if (!response.accessToken)
+            throw Error({
+                name: 'Sample-Auth',
+                message: 'no access token acquired',
+                status: 401,
+            });
+
+        // call API on behalf of user
+        let apiResponse = await callResourceAPI(
+            response.accessToken,
+            'https://graph.microsoft.com/v1.0/me'
+        );
+        if (!apiResponse)
+            throw Error({
+                name: 'Sample-Graph',
+                message: 'call to Graph failed',
+                status: 500,
+            });
+
+        // MongoDB (CosmosDB) connect
+        const mongoDBConnected = await RecipesService.connect();
+        if (!mongoDBConnected)
+            throw Error({
+                name: 'Sample-DBConnection',
+                message: "couldn't connect to database",
+                status: 500,
+            });
+        context.log(req.method);
+        switch (req.method) {
+            case 'POST':
+                await postRecipe(context, req);
+                break;
+            case 'GET':
+                await getRecipes(context);
+                break;
+            default:
+        }
+    } catch (error) {
+        context.log(error);
+
+        context.res = {
+            status: error.status || 500,
+            body: {
+                response: error.message || JSON.stringify(error),
+            },
+        };
     }
 };
 
@@ -143,111 +209,44 @@ const getSigningKeys = async (header) => {
 };
 
 const postRecipe = async (context, req) => {
-    try {
-        // get ssoToken from client request
-        const ssoToken = req.body?.ssoToken;
-        if (!ssoToken)
-            throw Error({
-                name: 'Sample-Auth',
-                message: 'no ssoToken sent from client',
-                status: 401,
-            });
+    // get appUser from client request
+    // this isn't passed in on first request
+    const newRecipe = req.body?.newRecipe;
 
-        // get appUser from client request
-        // this isn't passed in on first request
-        const newRecipe = req.body?.newRecipe;
+    let foundRecipe = await RecipesService.getRecipeByTitle(newRecipe.title);
 
-        // validate client's ssoToken
-        const isAuthorized = await validateAccessToken(ssoToken);
-        if (!isAuthorized)
-            throw Error({
-                name: 'Sample-Auth',
-                message: "can't validate access token",
-                status: 401,
-            });
-
-        // construct scope for API call - must match registered scopes
-        const oboRequest = {
-            oboAssertion: ssoToken,
-            scopes: ['User.Read'],
-        };
-
-        // get token on behalf of user
-        let response = await cca.acquireTokenOnBehalfOf(oboRequest);
-        if (!response.accessToken)
-            throw Error({
-                name: 'Sample-Auth',
-                message: 'no access token acquired',
-                status: 401,
-            });
-
-        // call API on behalf of user
-        let apiResponse = await callResourceAPI(
-            response.accessToken,
-            'https://graph.microsoft.com/v1.0/me'
-        );
-        if (!apiResponse)
-            throw Error({
-                name: 'Sample-Graph',
-                message: 'call to Graph failed',
-                status: 500,
-            });
-
-        // MongoDB (CosmosDB) connect
-        const mongoDBConnected = await RecipesService.connect();
-        if (!mongoDBConnected)
+    // Upsert to MongoDB (CosmosDB)
+    if (!foundRecipe) {
+        foundRecipe = await RecipesService.addRecipe(newRecipe);
+        if (!foundRecipe)
             throw Error({
                 name: 'Sample-DBConnection',
-                message: "couldn't connect to database",
+                message: 'no user returned from database',
                 status: 500,
             });
-
-        let foundRecipe = await RecipesService.getRecipeByTitle(
-            newRecipe.title
-        );
-
-        // Upsert to MongoDB (CosmosDB)
-        if (!foundRecipe) {
-            foundRecipe = await RecipesService.addRecipe(newRecipe);
-            if (!foundRecipe)
-                throw Error({
-                    name: 'Sample-DBConnection',
-                    message: 'no user returned from database',
-                    status: 500,
-                });
-        } else {
-            return (context.res = {
-                status: 409,
-                body: {
-                    message: 'Recipe already exists',
-                    response: foundRecipe.toJSON() || null,
-                },
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-        }
-
-        // Return to client
+    } else {
         return (context.res = {
-            status: 200,
+            status: 409,
             body: {
+                message: 'Recipe already exists',
                 response: foundRecipe.toJSON() || null,
             },
             headers: {
                 'Content-Type': 'application/json',
             },
         });
-    } catch (error) {
-        context.log(error);
-
-        context.res = {
-            status: error.status || 500,
-            body: {
-                response: error.message || JSON.stringify(error),
-            },
-        };
     }
+
+    // Return to client
+    return (context.res = {
+        status: 200,
+        body: {
+            response: foundRecipe.toJSON() || null,
+        },
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
 };
 
 const getRecipes = async (context) => {
@@ -266,7 +265,7 @@ const getRecipes = async (context) => {
         return (context.res = {
             status: 200,
             body: {
-                response: allRecipes
+                response: allRecipes,
             },
             headers: {
                 'Content-Type': 'application/json',

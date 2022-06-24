@@ -11,35 +11,39 @@
  * @param {string} accessToken
  * @param {string} apiEndpoint
  */
-export const callApiWithToken = async(accessToken: any, apiEndpoint: any) => {
-  const headers = new Headers();
-  const bearer = `Bearer ${accessToken}`;
+export const callApiWithToken = async (accessToken: any, apiEndpoint: any) => {
+    const headers = new Headers();
+    const bearer = `${accessToken}`;
 
-  headers.append("Authorization", bearer);
+    headers.append('Authorization', bearer);
 
-  const options = {
-    method: "GET",
-    headers: headers
-  };
+    const options = {
+        method: 'GET',
+        headers: headers,
+    };
 
-  return fetch(apiEndpoint, options)
-    .then(response => response.json())
-    .catch(error => console.log(error));
-}
-
+    return fetch(apiEndpoint, options)
+        .then((response) => response.json())
+        .catch((error) => console.log(error));
+};
 
 /**
  * Makes a POST request sending token.
  * @param {string} accessToken
  * @param {string} apiEndpoint
  */
-export const callOwnApiWithToken = async(accessToken, apiEndpoint, newRecipe) => {
-  return fetch(apiEndpoint, {
-    method: "POST",
-    body: JSON.stringify({
-      ssoToken: accessToken,
-      newRecipe
+export const callOwnApiWithToken = async (
+    accessToken,
+    apiEndpoint,
+    newRecipe
+) => {
+    return fetch(apiEndpoint, {
+        method: 'POST',
+        body: JSON.stringify({
+            ssoToken: accessToken,
+            newRecipe,
+        }),
     })
-  }).then(response => response.json())
-    .catch(error => console.log(error));
-}
+        .then((response) => response.json())
+        .catch((error) => console.log(error));
+};

@@ -6,7 +6,7 @@ import { MsalAuthenticationTemplate, useMsal, useAccount } from "@azure/msal-rea
 import { InteractionRequiredAuthError, InteractionType } from "@azure/msal-browser";
 
 import { loginRequest, protectedResources } from "../../authConfig";
-import { callOwnApiWithToken } from "../fetch";
+import { callApiWithToken } from "../fetch";
 import { FunctionData } from "../components/DataDisplay";
 import { SubmitRecipe } from "../components/SubmitRecipe";
 
@@ -28,9 +28,8 @@ const FunctionContent = () => {
         scopes: protectedResources.recipeApi.scopes,
         account: account
       }).then((response) => {
-        // @ts-ignore
         setAccessToken(response.accessToken);
-        callOwnApiWithToken(response.accessToken, protectedResources.recipeApi.endpoint)
+        callApiWithToken(response.accessToken, protectedResources.recipeApi.endpoint)
           .then(response => setFunctionData(response));
       }).catch((error) => {
         // in case if silent token acquisition fails, fallback to an interactive method
@@ -41,7 +40,7 @@ const FunctionContent = () => {
             }).then((response) => {
               // @ts-ignore
               setAccessToken(response.accessToken);
-              callOwnApiWithToken(response.accessToken, protectedResources.recipeApi.endpoint)
+              callApiWithToken(response.accessToken, protectedResources.recipeApi.endpoint)
                 .then(response => setFunctionData(response));
             }).catch(error => console.log(error));
           }
