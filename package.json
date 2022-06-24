@@ -6,6 +6,7 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
+        "api": "cd api && npm run start",
         "preview": "vite preview",
         "cypress:open": "cypress open"
     },
