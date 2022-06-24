@@ -1,17 +1,17 @@
-// @ts-nocheck
-
-import { connect as mongooseConnect } from 'mongoose';
+import { Recipe, PaginationOptions } from '../types';
+import {
+    connect as mongooseConnect,
+    disconnect as mongooseDisconnect,
+} from 'mongoose';
 import Recipes from '../models/recipes';
-
 let connected = false;
-let connection = null;
 
 const mongooseConfig = {
     url: process.env.MONGODB_URL,
     options: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: process.env.NODE_ENV
+        dbName: process.env.NODE_ENV,
     },
 };
 
@@ -24,10 +24,7 @@ const connect = async () => {
             mongooseConfig.options
         ) {
             // connect to DB
-            connection = await mongooseConnect(
-                mongooseConfig.url,
-                mongooseConfig.options
-            );
+            await mongooseConnect(mongooseConfig.url, mongooseConfig.options);
             connected = true;
             return connected;
         } else if (connected) {
@@ -36,43 +33,41 @@ const connect = async () => {
             return connected;
         } else {
             // can't connect to DB
-            throw Error(
-                'Mongoose URL needs to be added to Config settings as MONGODB_URL'
-            );
+            console.log('Mongoose needs Config settings');
         }
     } catch (err) {
         console.log(`Mongoose connection error: ${err}`);
         throw Error('connection error -' + err);
     }
+    return false;
 };
 
-const disconnect = () => {
-    connection.disconnect();
+const disconnect = async () => {
+    await mongooseDisconnect();
 };
 
 const isConnected = () => {
     return connected;
 };
 
-const queryRecipes = async (filter, options) => {
-    const recipes = await Recipes.paginate(filter, options);
-    return recipes;
+const queryRecipes = async (filter: string, options: PaginationOptions) => {
+    return Recipes.paginate(filter, options);
 };
 
-const getRecipeByTitle = async (title) => {
+const getRecipeByTitle = async (title: string) => {
     return Recipes.findOne({ title });
 };
 
-const getRecipeById = async (id) => {
+const getRecipeById = async (id: string) => {
     return await Recipes.findById(id);
 };
 
-const addRecipe = async (recipe) => {
+const addRecipe = async (recipe: Recipe) => {
     const newRecipe = new Recipes(recipe);
     return newRecipe.save();
 };
 
-const deleteRecipeById = async (recipeId) => {
+const deleteRecipeById = async (recipeId: string) => {
     const tempUser = await getRecipeById(recipeId);
     if (!tempUser) {
         throw new Error('User not found');
@@ -87,7 +82,7 @@ const getAllRecipes = async () => {
 
 const deleteAllRecipes = async () => {
     await Recipes.deleteMany({});
-}
+};
 
 export default {
     connect,
@@ -99,5 +94,5 @@ export default {
     addRecipe,
     deleteRecipeById,
     getAllRecipes,
-    deleteAllRecipes
+    deleteAllRecipes,
 };

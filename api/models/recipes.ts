@@ -1,14 +1,26 @@
-import { Schema, model } from 'mongoose';
-import { Recipe as RecipeType } from '../types';
+import { Schema, model, Document } from 'mongoose';
+import { Component, Recipe } from "../types";
 import { paginate } from '../utils/mapping';
 
-interface RecipeObject extends RecipeType {
+interface IRecipe extends Document {
     id?: string;
     _id?: string;
     __v?: string;
+    title: string;
+    instructions: string;
+    components: Component[];
+    paginate: () => PaginationReturn;
 }
 
-const recipeSchema: Schema = new Schema<RecipeType>({
+type PaginationReturn = {
+    results: Recipe[];
+    page: number;
+    limit: number;
+    totalPages: number;
+    totalResults: number;
+};
+
+const recipeSchema: Schema = new Schema<Recipe>({
     title: {
         type: String,
         required: true,
@@ -56,7 +68,7 @@ const recipeSchema: Schema = new Schema<RecipeType>({
 });
 
 recipeSchema.set('toJSON', {
-    transform: (_document, returnedObject: RecipeObject) => {
+    transform: (_document, returnedObject: IRecipe) => {
         if (returnedObject._id) {
             returnedObject.id = returnedObject._id.toString();
             delete returnedObject._id;
@@ -67,6 +79,6 @@ recipeSchema.set('toJSON', {
 
 recipeSchema.plugin(paginate);
 
-const Recipes = model<RecipeType>('Recipes', recipeSchema);
+const Recipes: any = model<IRecipe>('Recipes', recipeSchema);
 
 export default Recipes;
