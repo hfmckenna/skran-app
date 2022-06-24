@@ -2,6 +2,7 @@
     "name": "skran-app",
     "private": true,
     "version": "0.0.1",
+    "proxy": "http://localhost:3000",
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
@@ -11,7 +12,9 @@
     "dependencies": {
         "react": "^18.0.0-rc.2",
         "react-dom": "^18.0.0-rc.2",
-        "react-router-dom": "^6.2.2"
+        "react-router-dom": "^6.2.2",
+        "@azure/msal-browser": "^2.22.1",
+        "@azure/msal-react": "^1.3.1"
     },
     "devDependencies": {
         "@types/react": "^17.0.40",
