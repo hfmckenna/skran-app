@@ -1,8 +1,9 @@
+// @ts-nocheck
+
 /*
 * Copyright (c) Microsoft Corporation. All rights reserved.
 * Licensed under the MIT License.
 */
-
 import { LogLevel } from "@azure/msal-browser";
 
 /**
@@ -12,10 +13,10 @@ import { LogLevel } from "@azure/msal-browser";
  */
 export const msalConfig = {
   auth: {
-    clientId:  `${process.env["REACT_APP_AAD_APP_CLIENT_ID"]}`, // This is the ONLY mandatory field that you need to supply.
-    authority: `https://login.microsoftonline.com/${process.env["REACT_APP_AAD_APP_TENANT_ID"]}`, // Defaults to "https://login.microsoftonline.com/common"
-    redirectUri: `${process.env["REACT_APP_AAD_APP_REDIRECT_URI"]}`, // You must register this URI on Azure Portal/App Registration. Defaults to window.location.origin
-    postLogoutRedirectUri: `${process.env["REACT_APP_AAD_APP_REDIRECT_URI"]}`, // Indicates the page to navigate after logout.
+    clientId:  `${import.meta.env.VITE_API_AAD_APP_CLIENT_ID}`, // This is the ONLY mandatory field that you need to supply.
+    authority: `https://login.microsoftonline.com/${import.meta.env.VITE_API_AAD_APP_TENANT_ID}`, // Defaults to "https://login.microsoftonline.com/common"
+    redirectUri: `${import.meta.env.VITE_API_AAD_APP_REDIRECT_URI}`, // You must register this URI on Azure Portal/App Registration. Defaults to window.location.origin
+    postLogoutRedirectUri: `${import.meta.env.VITE_API_AAD_APP_REDIRECT_URI}`, // Indicates the page to navigate after logout.
     navigateToLoginRequestUrl: false, // If "true", will navigate back to the original request location before processing the auth code response.
   },
   cache: {
@@ -68,6 +69,6 @@ export const protectedResources = {
   },
   functionApi: {
     endpoint: "/api/hello",
-    scopes: [`${process.env["REACT_APP_AAD_APP_FUNCTION_SCOPE_URI"]}/access_as_user`], // e.g. api://xxxxxx/access_as_user
+    scopes: [`${import.meta.env.VITE_API_AAD_APP_FUNCTION_SCOPE_URI}/access_as_user`], // e.g. api://xxxxxx/access_as_user
   }
 }

@@ -1,9 +1,5 @@
 {
-    "routes": [
-        {
-            "route": "/api",
-            "redirect": "https://api.skran.app/api",
-            "statusCode": 301
-        }
-    ]
+    "navigationFallback": {
+        "rewrite": "index.html"
+    }
 }

@@ -28,5 +28,6 @@ dist-ssr
 cypress/videos
 cypress/screenshots
 
+# environment
 .env.development
-.env.production
+local.settings.json
