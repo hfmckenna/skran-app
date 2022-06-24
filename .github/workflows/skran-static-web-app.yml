@@ -1,5 +1,4 @@
-name: Azure Static Web Apps CI/CD
-
+name: Skran App CI/CD
 on:
   push:
     branches:
@@ -7,7 +6,9 @@ on:
 jobs:
   populate-env:
     runs-on: ubuntu-latest
+    name: Azure Configuration
     steps:
+      - uses: actions/checkout@v3
       - name: Azure Login
         uses: azure/login@v1
         with:
@@ -25,6 +26,7 @@ jobs:
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
   unit-tests:
     runs-on: ubuntu-latest
+    name: Unit & Integration Tests
     services:
       mongodb:
         image: mongo:latest
@@ -48,6 +50,7 @@ jobs:
     needs: [unit-tests,populate-env]
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
+    name: Deploy
     steps:
       - uses: actions/checkout@v3
         with:
@@ -71,6 +74,7 @@ jobs:
   e2e-tests:
     needs: [unit-tests, deploy]
     runs-on: ubuntu-latest # or macos-latest, windows-latest
+    name: Run E2E Tests
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
