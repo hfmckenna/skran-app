@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './App.css';
+import './index.css';
 
 function App() {
     return (
@@ -22,7 +22,7 @@ function Recipe() {
         })()
     }, []);
 
-    return <div>{recipe && recipe?.title}</div>;
+    return <div className="text-center">{recipe && recipe?.title}</div>;
 }
 
 export default App;
